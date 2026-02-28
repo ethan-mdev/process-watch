@@ -8,7 +8,7 @@ dist/
 
 # Logs and runtime data
 logs/
-watchlist.json
+
 
 # Dependencies
 .vite/

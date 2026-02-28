@@ -1,30 +1,38 @@
 package core
 
-// Service represents a system service.
-type Service struct {
+// Process represents a system process.
+type Process struct {
 	Name          string  `json:"name"`
-	DisplayName   string  `json:"displayName,omitempty"`
-	State         string  `json:"state,omitempty"`     // running|stopped|starting|stopping|unknown
-	StartType     string  `json:"startType,omitempty"` // auto|manual|disabled|unknown
-	CanStop       bool    `json:"canStop,omitempty"`
-	PID           int     `json:"pid,omitempty"`
-	CPUPercent    float64 `json:"cpuPercent,omitempty"`    // CPU usage percentage
-	MemoryMB      float64 `json:"memoryMB,omitempty"`      // Memory usage in MB
-	UptimeSeconds int64   `json:"uptimeSeconds,omitempty"` // How long service has been running
+	PID           int32   `json:"pid"`
+	State         string  `json:"state"` // e.g., "running", "stopped"
+	CPUPercent    float64 `json:"cpuPercent"`
+	MemoryMB      float64 `json:"memoryMB"`
+	UptimeSeconds int64   `json:"uptimeSeconds"`
 }
 
-// WatchlistItem represents an item in the watchlist.
+// WatchlistItem represents a process being monitored.
 type WatchlistItem struct {
-	ServiceName  string   `json:"serviceName"`           // Name of the service being watched
-	AutoRestart  bool     `json:"autoRestart"`           // Should we auto-restart if it crashes?
-	RestartCount int      `json:"restartCount"`          // How many times have we restarted it?
-	FailCount    int      `json:"failCount,omitempty"`   // Consecutive failure count
-	LastRestart  string   `json:"lastRestart,omitempty"` // ISO timestamp of last restart
-	Service      *Service `json:"service,omitempty"`     // Current service state when fetched
+	Name         string `json:"name"`
+	RestartCmd   string `json:"restartCmd"`
+	AutoRestart  bool   `json:"autoRestart"`
+	MaxRetries   int    `json:"maxRetries"`
+	CooldownSecs int    `json:"cooldownSecs"`
+	RestartCount int    `json:"restartCount"`
+	FailCount    int    `json:"failCount"`
+	LastRestart  string `json:"lastRestart"`
 }
 
-// Represents an SSE event.
+// WatchStatus (central data type flowing from watcher -> TUI and watcher -> prometheus)
+type WatchStatus struct {
+	Entry             WatchlistItem `json:"entry"`
+	Process           *Process      `json:"process,omitempty"` // nil if not running
+	Running           bool          `json:"running"`
+	InCooldown        bool          `json:"inCooldown"`
+	CooldownRemaining int           `json:"cooldownRemaining"` // seconds
+}
+
+// Event represents a loggable event in the system.
 type Event struct {
-	Type string      `json:"type"`
-	Data interface{} `json:"data"`
+	Type string                 `json:"type"`
+	Data map[string]interface{} `json:"data"`
 }

@@ -2,18 +2,12 @@ package core
 
 import "context"
 
-// ServiceManager abstracts OS service control.
-type ServiceManager interface {
-	// Lists all services.
-	List(ctx context.Context) ([]Service, error)
-	// Gets a specific service by name with full details including resource usage.
-	Get(ctx context.Context, name string) (Service, error)
-	// Starts a service by name.
-	Start(ctx context.Context, name string) error
-	// Stops a service by name.
-	Stop(ctx context.Context, name string) error
-	// Restarts a service by name.
-	Restart(ctx context.Context, name string) error
+// ProcessManager abstracts OS service control.
+type ProcessManager interface {
+	ListAll(ctx context.Context) ([]Process, error)           // all OS processes
+	Find(ctx context.Context, name string) ([]Process, error) // match by name (may return multiple PIDs)
+	IsRunning(ctx context.Context, name string) (bool, error)
+	Restart(ctx context.Context, restartCmd string) error // exec.Command via shell
 }
 
 // WatchlistManager abstracts watchlist management.
@@ -23,11 +17,17 @@ type WatchlistManager interface {
 	// Gets a specific watchlist item by service name with current service details.
 	Get(ctx context.Context, name string) (WatchlistItem, error)
 	// Adds a service to the watchlist with auto-restart configuration.
-	Add(ctx context.Context, name string, autoRestart bool) error
+	Add(ctx context.Context, item WatchlistItem, autoRestart bool) error
 	// Removes a service from the watchlist.
 	Remove(ctx context.Context, name string) error
 	// Updates the auto-restart setting for a watchlist item.
 	Update(ctx context.Context, name string, autoRestart bool) error
 	// Increments the restart count and last restart time for a watchlist item.
 	IncrementRestartCount(ctx context.Context, name string) error
+	// Increments the failure count for a watchlist item.
+	IncrementFailCount(ctx context.Context, name string) error
+	// Resets the failure count for a watchlist item (e.g., after a successful restart).
+	ResetFailCount(ctx context.Context, name string) error
+	SetTrackedPID(ctx context.Context, name string, pid int32) error
+	GetTrackedPID(ctx context.Context, name string) (int32, error)
 }

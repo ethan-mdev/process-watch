@@ -8,18 +8,14 @@ import (
 	"time"
 
 	"gopkg.in/natefinch/lumberjack.v2"
-
-	"github.com/ethan-mdev/service-watch/internal/core"
-	"github.com/ethan-mdev/service-watch/internal/sse"
 )
 
 type Logger struct {
-	eventFile   io.WriteCloser
-	broadcaster *sse.Broadcaster
-	mutex       sync.Mutex
+	eventFile io.WriteCloser
+	mutex     sync.Mutex
 }
 
-func Start(logPath string, broadcaster *sse.Broadcaster) (*Logger, error) {
+func Start(logPath string) (*Logger, error) {
 	// Lumberjack handles rotation automatically
 	logFile := &lumberjack.Logger{
 		Filename:   logPath,
@@ -30,8 +26,7 @@ func Start(logPath string, broadcaster *sse.Broadcaster) (*Logger, error) {
 	}
 
 	return &Logger{
-		eventFile:   logFile,
-		broadcaster: broadcaster,
+		eventFile: logFile,
 	}, nil
 }
 
@@ -59,14 +54,6 @@ func (l *Logger) log(level, eventType string, data map[string]interface{}) {
 
 	// Print to console for development visibility
 	fmt.Printf("[%s] %s: %v\n", level, eventType, data)
-
-	// Broadcast to SSE clients
-	if l.broadcaster != nil {
-		l.broadcaster.Broadcast(core.Event{
-			Type: eventType,
-			Data: data,
-		})
-	}
 }
 
 func (l *Logger) Close() error {
