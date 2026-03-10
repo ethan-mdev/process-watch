@@ -117,6 +117,8 @@ func NewListModel(ctx context.Context, watchlist core.WatchlistManager) ListMode
 	l.SetFilteringEnabled(false)
 	// Disable built-in quit so the parent model owns it.
 	l.KeyMap.Quit = key.NewBinding()
+	l.KeyMap.ShowFullHelp = key.NewBinding()
+	l.KeyMap.CloseFullHelp = key.NewBinding()
 	l.AdditionalShortHelpKeys = func() []key.Binding {
 		return []key.Binding{listKeys.Add, listKeys.Remove, listKeys.Restart, listKeys.Debug}
 	}
