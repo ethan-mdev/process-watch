@@ -1,168 +1,147 @@
-# Service Watch
+# ServiceWatch
+![version](https://img.shields.io/badge/version-2.0-blue)
+![go](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go&logoColor=white)
+![platform](https://img.shields.io/badge/platform-Windows%20|%20Linux%20|%20macOS-lightgrey)
+![license](https://img.shields.io/badge/license-MIT-green)
 
-A standalone Windows service monitoring application with auto-restart capabilities, real-time web dashboard, and system tray integration.
+A cross-platform process monitor with auto-restart capabilities, a terminal UI dashboard, and a headless daemon mode.
+
+![TUI Dashboard](screenshots/dashboard.png)
 
 ## Features
 
-- **Web Dashboard** - Modern real-time interface with live charts and service management
-- **System Tray Integration** - Runs quietly in background, accessible via system tray icon
-- **Service Management** - Start, stop, restart Windows services with one click
-- **Auto-Restart** - Monitor services and automatically restart on failure
-- **Real-time Metrics** - CPU, memory, and uptime tracking with live updating charts
-- **Live Log Streaming** - View service events in real-time through the web interface
-- **Historical Data** - Queryable event logs with filtering and search capabilities
-- **Self-contained** - Single executable with embedded web interface, no external dependencies
+- **TUI Dashboard** — Real-time process status with live CPU, memory, and PID tracking
+- **Headless Mode** — Run as a background daemon for unattended monitoring
+- **Auto-Restart** — Automatically restart crashed processes with configurable cooldowns and retry limits
+- **PID Pinning** — Tracks processes by PID with name-based fallback for reliable liveness detection
+- **Process Picker** — Browse and filter all running system processes to add to your watchlist
+- **Structured Logging** — JSONL event log with automatic rotation (10MB max, 5 backups, 7-day retention)
+- **Cross-Platform** — Works on Windows, Linux, and macOS
 
 ## Quick Start
 
 ### Prerequisites
 
-- Windows OS
-- **Administrator privileges** (required for service management)
+- Go 1.25+ (to build from source)
 
-### Installation & Usage
-
-1. Download `service-watch.exe` from releases
-
-2. **Run as Administrator** (right-click → "Run as administrator"):
-
-3. The application will:
-   - Start quietly in your **system tray** (look for the Service Watch icon)
-   - Begin monitoring on port 8080
-
-4. **Access the dashboard**:
-   - Right-click the system tray icon → "Open Dashboard"
-   - Or browse to: `http://localhost:8080`
-
-5. **View logs**:
-   - Right-click the system tray icon → "Open Logs Folder"
-   - Or check the `logs/` directory next to the executable
-
-## System Tray Controls
-
-Right-click the Service Watch system tray icon for quick access:
-
-- **Open Dashboard** - Launch web interface in your browser
-- **Open Logs Folder** - View log files in Windows Explorer  
-- **Exit** - Close Service Watch completely
-
-## Web Dashboard Features
-
-### Service Management
-- Add services to your watchlist with auto-discovery
-- Start/stop/restart services with one click
-- Configure auto-restart policies
-- Real-time status monitoring with visual indicators
-
-### Live Charts
-- Pin services to charts for real-time CPU and memory monitoring
-- Auto-scaling graphs that adapt to actual usage patterns
-- Historical data visualization
-
-### Event Logging
-- Live log streaming with real-time filtering
-- Historical log queries with search capabilities
-- Multiple log levels and event types
-- Export and analysis tools
-
-## Configuration
-
-### Port Configuration
-The default port is `8080`. To change it:
-
-1. Edit `main.go` and modify this line:
-```go
-addr := "127.0.0.1:8080"  // Change 8080 to your desired port
-```
-
-2. Rebuild the application:
-```bash
-go build -ldflags="-H windowsgui" -o service-watch.exe .
-```
-
-### Data Storage
-- **Logs**: Stored in `logs/events.jsonl` (next to executable)
-- **Configuration**: Stored in `watchlist.json` (next to executable)
-- **Log Rotation**: Automatic (10MB max, 5 backups, 7 days retention)
-
-### Auto-Start (Optional)
-To start Service Watch automatically with Windows:
-
-1. Copy `service-watch.exe` to a permanent location
-2. Add to Windows startup folder: `Win+R` → `shell:startup`
-3. Create a shortcut to the executable in the startup folder
-
-## Development
-
-### Building from Source
+### Build & Run
 
 ```bash
-# Standard build (with console window)
-go build -o service-watch.exe .
-
-# GUI build (system tray only, recommended)
-go build -ldflags="-H windowsgui" -o service-watch.exe .
+git clone https://github.com/ethan-mdev/service-watch.git
+cd service-watch
+go build -o service-watch .
 ```
 
-### Dependencies
-- [chi](https://github.com/go-chi/chi) - HTTP router
-- [systray](https://github.com/getlantern/systray) - System tray integration
-- [gopsutil](https://github.com/shirou/gopsutil) - System metrics
-- [lumberjack](https://github.com/natefinch/lumberjack) - Log rotation
+Launch the TUI:
 
-### Project Structure
+```bash
+./service-watch
+```
+
+Or run in headless/daemon mode:
+
+```bash
+./service-watch --headless
+```
+
+> **Note:** Headless mode requires an existing watchlist. Run the TUI first to set one up.
+
+## Usage
+
+### TUI Controls
+
+| Key | Action |
+|-----|--------|
+| `a` | Add a process to the watchlist |
+| `d` | Remove selected process (with confirmation) |
+| `r` | Restart selected process (with confirmation) |
+| `v` | Toggle debug info panel |
+| `q` | Quit |
+
+On startup, the TUI will prompt you to load an existing watchlist or start fresh.
+
+![TUI Welcome](screenshots/welcome.png)
+
+### Adding a Process
+
+Press `a` to open the process picker, which lists all running system processes. Use `/` to filter. Select a process and configure its restart command, max retries, cooldown, and auto-restart setting.
+
+![TUI Add Screen](screenshots/add.png)
+
+### Configuration
+
+`config.yaml` is created automatically on first run with sensible defaults:
+
+```yaml
+metricsPort: 9090
+pollIntervalSecs: 5
+restartVerifyDelaySecs: 3
+logLevel: info              # info | debug
+```
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `metricsPort` | Port for metrics endpoint (planned) | `9090` |
+| `pollIntervalSecs` | How often to check process status | `5` |
+| `restartVerifyDelaySecs` | Delay after restart before verifying health | `3` |
+| `logLevel` | Log verbosity (`info` or `debug`) | `info` |
+
+### Watchlist
+
+The watchlist is stored in `watchlist.json` next to the executable. Each entry tracks:
+
+- Process name and restart command
+- Auto-restart toggle
+- Max retries and cooldown period
+- Restart/failure counters and last restart timestamp
+
+### Logs
+
+Events are logged to `logs/events.jsonl` in structured JSON format. Log rotation is automatic.
+
+## Project Structure
+
 ```
 service-watch/
-├── main.go              # Application entry point
-├── internal/            # Go backend modules
-├── web/                 # Svelte web dashboard source
-└── icon.ico            # System tray icon
+├── main.go                        # Entry point, CLI flags, wiring
+├── config.yaml                    # Runtime configuration
+├── watchlist.json                 # Persisted watchlist
+├── screenshots/                   # Screenshots for README 
+└── internal/
+    ├── config/config.go           # Config loading and validation
+    ├── core/
+    │   ├── types.go               # Core data types
+    │   └── contracts.go           # Interfaces (ProcessManager, WatchlistManager)
+    ├── logger/logger.go           # JSONL logger with rotation
+    ├── monitor/watcher.go         # Polling loop, liveness checks, auto-restart
+    ├── process/manager.go         # OS process operations via gopsutil
+    ├── storage/watchlist.go       # JSON-backed watchlist persistence
+    └── tui/
+        ├── app.go                 # Bubble Tea bootstrap
+        ├── model.go               # Top-level TUI model and routing
+        └── views/
+            ├── welcome.go         # Startup screen
+            ├── list.go            # Main dashboard view
+            └── picker.go          # Process picker and add form
 ```
-
-## Troubleshooting
-
-### "Access Denied" Errors
-- Ensure you're running as Administrator
-- Some Windows services require elevated privileges to manage
-
-### Dashboard Won't Load
-- Check if port 8080 is already in use
-- Verify Windows Firewall isn't blocking the application
-- Try accessing `http://127.0.0.1:8080` directly
-
-### System Tray Icon Missing
-- Check if the application is running in Task Manager
-- Look in the "hidden icons" area of your system tray
-- Restart the application as Administrator
-
-## Event Types
-
-Service Watch monitors and logs the following events:
-
-- `app_started` - Application startup
-- `host_resources` - System CPU/memory metrics  
-- `service_status` - Service state and resource usage
-- `restart_attempt` - Auto-restart initiated
-- `restart_success` - Service restarted successfully
-- `restart_failed` - Service restart failed
-- `service_failed` - Service exceeded restart limits
-
-## Platform Support
-
-- ✅ **Windows 10/11** - Fully supported
-- 🚧 **Linux** - Planned for future release
-
-## Contributing
-
-Contributions welcome! Please open an issue or submit a pull request.
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Roadmap
 
-- [ ] Discord/Slack webhook notifications
-- [ ] Performance alerting thresholds  
-- [ ] Linux/systemd support
-- [ ] Remote monitoring capabilities
+### v2.1 — Webhook Notifications
+Discord/Slack webhook alerts for process failures and restarts.
+
+### v2.2 — Prometheus Metrics Endpoint
+Expose process and host metrics at `/metrics` for scraping.
+
+### v2.3 — TUI Log Viewer
+Tail and filter structured logs directly within the TUI.
+
+### v2.4 — Config Hot-Reload
+Pick up `config.yaml` changes without restarting the application.
+
+### v3 — Advanced TUI
+Multi-stage failure policies, process grouping/tagging, and real-time/historical charts for process resource data.
+
+## License
+
+MIT License — see [LICENSE](LICENSE) for details.
