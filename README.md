@@ -86,6 +86,37 @@ logLevel: info              # info | debug
 | `restartVerifyDelaySecs` | Delay after restart before verifying health | `3` |
 | `logLevel` | Log verbosity (`info` or `debug`) | `info` |
 
+### Discord Alerts
+
+ServiceWatch can send real-time alerts to a Discord channel when monitored processes crash, fail to restart, or recover. Alerts are sent asynchronously and do not block the monitoring loop.
+
+To enable alerts, edit the `alerts` section on your `config.yaml`:
+
+```yaml
+alerts:
+  enabled: true
+  discordWebhookURL: "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
+  projectLabel: "service-watch"
+```
+
+| Option | Description | Required |
+|--------|-------------|----------|
+| `enabled` | Enable/disable Discord alerting | Yes |
+| `discordWebhookURL` | Discord webhook URL for alert delivery | Yes (if enabled) |
+| `projectLabel` | Project label displayed in alert messages | No (defaults to `service-watch`) |
+
+**Webhook URL:** Create a Discord webhook in your server's channel settings, then copy the full URL.
+
+**Alert Events:**
+- Process crashed and detected as down
+- Restart command failed to execute
+- Max retries exceeded (process permanently stopped)
+- Restart verified successful (process recovered)
+
+**Message Format:**
+
+![Discord Alert Example](screenshots/discord-alert-example.png)
+
 ### Watchlist
 
 The watchlist is stored in `watchlist.json` next to the executable. Each entry tracks:
@@ -124,9 +155,6 @@ service-watch/
 ```
 
 ## Roadmap
-
-### v2.1 — Webhook Notifications
-Discord/Slack webhook alerts for process failures and restarts.
 
 ### v2.2 — Prometheus Metrics Endpoint
 Expose process and host metrics at `/metrics` for scraping.
