@@ -17,6 +17,7 @@ A cross-platform process monitor with auto-restart capabilities, a terminal UI d
 - **Process Picker** — Browse and filter all running system processes to add to your watchlist
 - **Structured Logging** — JSONL event log with automatic rotation (10MB max, 5 backups, 7-day retention)
 - **Cross-Platform** — Works on Windows, Linux, and macOS
+- **Discord Alerts** — Optional Discord webhook feature to send alerts on process status change
 
 ## Quick Start
 
