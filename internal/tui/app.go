@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ethan-mdev/service-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/core"
 )
 
 // Run starts the Bubble Tea TUI and blocks until the user quits or ctx is cancelled.

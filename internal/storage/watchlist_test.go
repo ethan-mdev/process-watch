@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethan-mdev/service-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/core"
 )
 
 func TestNewJSONWatchlist_LoadMissingFileStartsEmpty(t *testing.T) {

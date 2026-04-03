@@ -10,7 +10,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/ethan-mdev/service-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/core"
 )
 
 // --- Process list item ---

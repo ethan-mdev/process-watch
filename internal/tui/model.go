@@ -4,8 +4,8 @@ import (
 	"context"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/ethan-mdev/service-watch/internal/core"
-	"github.com/ethan-mdev/service-watch/internal/tui/views"
+	"github.com/ethan-mdev/process-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/tui/views"
 )
 
 type activeView int

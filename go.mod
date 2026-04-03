@@ -1,4 +1,4 @@
-module github.com/ethan-mdev/service-watch
+module github.com/ethan-mdev/process-watch
 
 go 1.25.3
 

@@ -6,7 +6,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/ethan-mdev/service-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/core"
 )
 
 type welcomeChoice int
@@ -87,7 +87,7 @@ func (m WelcomeModel) View() string {
 		return "loading..."
 	}
 
-	title := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("62")).Render("ServiceWatch")
+	title := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("62")).Render("ProcessWatch")
 
 	var body string
 	if m.count == 0 {

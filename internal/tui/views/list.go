@@ -9,7 +9,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/ethan-mdev/service-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/core"
 )
 
 type pendingAction int
@@ -131,7 +131,7 @@ type ListModel struct {
 
 func NewListModel(ctx context.Context, watchlist core.WatchlistManager) ListModel {
 	l := list.New([]list.Item{}, statusDelegate{}, 0, 0)
-	l.Title = "ServiceWatch"
+	l.Title = "ProcessWatch"
 	l.SetShowStatusBar(true)
 	l.SetFilteringEnabled(false)
 	// Disable built-in quit so the parent model owns it.

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ethan-mdev/service-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/core"
 	gopsprocess "github.com/shirou/gopsutil/v4/process"
 )
 

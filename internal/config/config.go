@@ -51,7 +51,7 @@ func Load(path string) (*Config, error) {
 
 // WriteDefault writes a commented default config.yaml to path.
 func WriteDefault(path string) error {
-	const template = `# ServiceWatch configuration
+	const template = `# ProcessWatch configuration
 metricsPort: 9090
 pollIntervalSecs: 5
 restartVerifyDelaySecs: 3   # seconds to wait after restart before checking health
@@ -59,7 +59,7 @@ logLevel: info              # info | debug
 alerts:
   enabled: false
   discordWebhookURL: ""     # ex: https://discord.com/api/webhooks/<id>/<token>
-  projectLabel: "service-watch"
+  projectLabel: "process-watch"
 
 `
 	return os.WriteFile(path, []byte(template), 0644)
@@ -74,14 +74,14 @@ func defaultConfig() *Config {
 		Alerts: AlertsConfig{
 			Enabled:           false,
 			DiscordWebhookURL: "",
-			ProjectLabel:      "service-watch",
+			ProjectLabel:      "process-watch",
 		},
 	}
 }
 
 func applyDefaults(cfg *Config) {
 	if cfg.Alerts.ProjectLabel == "" {
-		cfg.Alerts.ProjectLabel = "service-watch"
+		cfg.Alerts.ProjectLabel = "process-watch"
 	}
 }
 

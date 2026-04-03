@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethan-mdev/service-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/core"
 )
 
 type jsonWatchlist struct {

@@ -202,14 +202,14 @@ func formatDiscordContent(event Event) string {
 	}
 	label := strings.TrimSpace(event.ProjectLabel)
 	if label == "" {
-		label = "service-watch"
+		label = "process-watch"
 	}
 	title := eventTitle(event.Type)
 
 	lines := []string{
 		"@everyone",
 		"```",
-		"SERVICEWATCH INCIDENT",
+		"PROCESSWATCH INCIDENT",
 		fmt.Sprintf("Project : %s", label),
 		fmt.Sprintf("Event   : %s", title),
 		fmt.Sprintf("Process : %s", valueOrUnknown(event.ProcessName)),

@@ -1,4 +1,4 @@
-# ServiceWatch
+# ProcessWatch
 ![version](https://img.shields.io/badge/version-2.0-blue)
 ![go](https://img.shields.io/badge/Go-1.25+-00ADD8?logo=go&logoColor=white)
 ![platform](https://img.shields.io/badge/platform-Windows%20|%20Linux%20|%20macOS-lightgrey)
@@ -28,21 +28,21 @@ A cross-platform process monitor with auto-restart capabilities, a terminal UI d
 ### Build & Run
 
 ```bash
-git clone https://github.com/ethan-mdev/service-watch.git
-cd service-watch
-go build -o service-watch .
+git clone https://github.com/ethan-mdev/process-watch.git
+cd process-watch
+go build -o process-watch .
 ```
 
 Launch the TUI:
 
 ```bash
-./service-watch
+./process-watch
 ```
 
 Or run in headless/daemon mode:
 
 ```bash
-./service-watch --headless
+./process-watch --headless
 ```
 
 > **Note:** Headless mode requires an existing watchlist. Run the TUI first to set one up.
@@ -81,7 +81,7 @@ logLevel: info              # info | debug
 alerts:
   enabled: false
   discordWebhookURL: ""     # ex: https://discord.com/api/webhooks/<id>/<token>
-  projectLabel: "service-watch"
+  projectLabel: "process-watch"
 ```
 
 | Option | Description | Default |
@@ -93,7 +93,7 @@ alerts:
 
 ### Discord Alerts
 
-ServiceWatch can send real-time alerts to a Discord channel when monitored processes crash, fail to restart, or recover. Alerts are sent asynchronously and do not block the monitoring loop.
+ProcessWatch can send real-time alerts to a Discord channel when monitored processes crash, fail to restart, or recover. Alerts are sent asynchronously and do not block the monitoring loop.
 
 To enable alerts, edit the `alerts` section on your `config.yaml`:
 
@@ -101,14 +101,14 @@ To enable alerts, edit the `alerts` section on your `config.yaml`:
 alerts:
   enabled: true
   discordWebhookURL: "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL"
-  projectLabel: "service-watch"
+  projectLabel: "process-watch"
 ```
 
 | Option | Description | Required |
 |--------|-------------|----------|
 | `enabled` | Enable/disable Discord alerting | Yes |
 | `discordWebhookURL` | Discord webhook URL for alert delivery | Yes (if enabled) |
-| `projectLabel` | Project label displayed in alert messages | No (defaults to `service-watch`) |
+| `projectLabel` | Project label displayed in alert messages | No (defaults to `process-watch`) |
 
 **Webhook URL:** Create a Discord webhook in your server's channel settings, then copy the full URL.
 
@@ -138,7 +138,7 @@ Events are logged to `logs/events.jsonl` in structured JSON format. Log rotation
 ## Project Structure
 
 ```
-service-watch/
+process-watch/
 ├── main.go                        # Entry point, CLI flags, wiring
 ├── screenshots/                   # Screenshots for README 
 └── internal/

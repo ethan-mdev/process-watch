@@ -33,8 +33,8 @@ func TestLoadCreatesDefaultWhenMissing(t *testing.T) {
 	if cfg.Alerts.Enabled {
 		t.Fatalf("Alerts.Enabled = true, want false")
 	}
-	if cfg.Alerts.ProjectLabel != "service-watch" {
-		t.Fatalf("Alerts.ProjectLabel = %q, want service-watch", cfg.Alerts.ProjectLabel)
+	if cfg.Alerts.ProjectLabel != "process-watch" {
+		t.Fatalf("Alerts.ProjectLabel = %q, want process-watch", cfg.Alerts.ProjectLabel)
 	}
 
 	if _, err := os.Stat(path); err != nil {
@@ -222,7 +222,7 @@ func TestLoadSetsDefaultProjectLabelWhenAlertsSectionOmitted(t *testing.T) {
 		t.Fatalf("Load() returned error: %v", err)
 	}
 
-	if cfg.Alerts.ProjectLabel != "service-watch" {
-		t.Fatalf("Alerts.ProjectLabel = %q, want service-watch", cfg.Alerts.ProjectLabel)
+	if cfg.Alerts.ProjectLabel != "process-watch" {
+		t.Fatalf("Alerts.ProjectLabel = %q, want process-watch", cfg.Alerts.ProjectLabel)
 	}
 }

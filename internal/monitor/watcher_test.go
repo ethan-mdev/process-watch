@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethan-mdev/service-watch/internal/alerting"
-	"github.com/ethan-mdev/service-watch/internal/config"
-	"github.com/ethan-mdev/service-watch/internal/core"
-	"github.com/ethan-mdev/service-watch/internal/logger"
+	"github.com/ethan-mdev/process-watch/internal/alerting"
+	"github.com/ethan-mdev/process-watch/internal/config"
+	"github.com/ethan-mdev/process-watch/internal/core"
+	"github.com/ethan-mdev/process-watch/internal/logger"
 )
 
 func TestCheckLivenessNameFallbackPinsPID(t *testing.T) {
